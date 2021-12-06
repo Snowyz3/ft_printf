@@ -34,7 +34,7 @@ static int	ft_putnbr(long long nbr)
 static int	putnbr_base(unsigned long long nbr, char ch, unsigned int base)
 {
 	g_len = 0;
-	if (nbr >= (long long)base)
+	if (nbr >= (unsigned long long)base)
 	{
 		putnbr_base(nbr / base, ch, base);
 		if (ch == 'X')
