@@ -4,7 +4,6 @@ int	ft_putstr_fd(char *s, int fd)
 {
 	size_t	i;
 
-
 	if (!fd)
 		return (0);
 	if (!s)

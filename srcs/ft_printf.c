@@ -5,7 +5,7 @@ char	g_lowerhex[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
 '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 char	g_upperhex[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
 '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-int	g_len;
+int		g_len;
 
 static int	ft_putnbr(long long nbr)
 {
@@ -31,10 +31,10 @@ static int	ft_putnbr(long long nbr)
 	return (g_len);
 }
 
-static int	putnbr_base(unsigned long long nbr, char ch, unsigned long long base)
+static int	putnbr_base(unsigned long long nbr, char ch, unsigned int base)
 {
 	g_len = 0;
-	if (nbr >= base)
+	if (nbr >= (long long)base)
 	{
 		putnbr_base(nbr / base, ch, base);
 		if (ch == 'X')
