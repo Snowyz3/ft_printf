@@ -1,16 +1,40 @@
-#include <unistd.h>
-#include <stdarg.h>
-#include "../includes/libft.h"
+#include "../includes/ft_printf.h"
+#include <stdio.h>
 
 char	g_lowerhex[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
 '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 char	g_upperhex[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
 '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-int		g_len;
+int	g_len;
 
-static int	putnbr_base(unsigned long nbr, char ch, int base)
+static int	ft_putnbr(long long nbr)
 {
-	if (nbr > base)
+	int	temp;
+
+	temp = nbr;
+	g_len = 0;
+	if (nbr < 0)
+	{
+		nbr *= -1;
+		ft_putchar_fd('-', 1);
+	}
+	if (nbr > 9)
+	{
+		ft_putnbr(nbr / 10);
+		ft_putchar_fd((nbr % 10) + 48, 1);
+	}
+	else
+		ft_putchar_fd((nbr % 10) + 48, 1);
+	g_len++;
+	if (temp < 0)
+		return (g_len + 1);
+	return (g_len);
+}
+
+static int	putnbr_base(unsigned long long nbr, char ch, unsigned long long base)
+{
+	g_len = 0;
+	if (nbr >= base)
 	{
 		putnbr_base(nbr / base, ch, base);
 		if (ch == 'X')
@@ -29,33 +53,34 @@ static int	putnbr_base(unsigned long nbr, char ch, int base)
 	return (g_len);
 }
 
-static int	special(const char ch, va_list arg)
+static int	putptr(unsigned long long nbr)
 {
-	int		len;
-	char	*str;
+	if (nbr == 0)
+	{
+		ft_putstr_fd("(nil)", 1);
+		return (5);
+	}
+	ft_putstr_fd("0x", 1);
+	return (putnbr_base(nbr, 'p', 16) + 2);
+}
 
-	len = 1;
+static int	convert(const char ch, va_list arg)
+{
 	if (ch == 'c')
 		ft_putchar_fd(va_arg(arg, int), 1);
 	else if (ch == 's')
-	{
-		str = va_arg(arg, char *);
-		len = ft_strlen(str);
-		ft_putstr_fd(str, 1);
-	}
+		return (ft_putstr_fd(va_arg(arg, char *), 1));
+	else if (ch == 'p')
+		return (putptr(va_arg(arg, unsigned long)));
 	else if (ch == 'd' || ch == 'i')
-		len = putnbr_base(va_arg(arg, int), ch, 10);
+		return (ft_putnbr(va_arg(arg, int)));
 	else if (ch == 'u')
-		len = putnbr_base(va_arg(arg, unsigned long), ch, 10);
-	else if (ch == 'p' || ch == 'x' || ch == 'X')
-	{
-		if (ch == 'p')
-			write(1, "0x", 2);
-		len = putnbr_base(va_arg(arg, unsigned long), ch, 16);
-	}
+		return (putnbr_base(va_arg(arg, unsigned int), ch, 10));
+	else if (ch == 'x' || ch == 'X')
+		return (putnbr_base(va_arg(arg, unsigned int), ch, 16));
 	else if (ch == '%')
 		ft_putchar_fd('%', 1);
-	return (len);
+	return (1);
 }
 
 int	ft_printf(const char *format, ...)
@@ -70,7 +95,7 @@ int	ft_printf(const char *format, ...)
 	while (format[i])
 	{
 		if (format[i] == '%')
-			len += special(format[++i], arg);
+			len += convert(format[++i], arg);
 		else
 			len += write(1, (format + i), 1);
 		i++;
@@ -78,27 +103,14 @@ int	ft_printf(const char *format, ...)
 	va_end(arg);
 	return (len);
 }
-/* 
-#include <stdio.h>
 
-int	main(int argc, char *argv[])
+/* #include <stdio.h>
+#include <limits.h>
+
+int	main()
 {
-	char	aa[50] = "weeee";
-	char	bb[50] = "aaaaa";
-	char	cc = 'c';
-	char	*ptr;
-	char	*ptr2;
-	char	*ptr3;
-	int		testr = 123;
-	int		testr2 = 456;
+	printf("%d\n", ft_printf(" %u ", LONG_MIN));
+	printf("%d\n", printf(" %u ", LONG_MIN));
 
-	ft_printf("\n%d\n", testr);
-	ft_printf("\n%x\n", testr);
-	ft_printf("\n%X\n", testr);
-	ft_printf("\n%p\n", &ptr);
-	printf("\n%d\n", testr);
-	printf("\n%x\n", testr);
-	printf("\n%X\n", testr);
-	printf("\n%p\n", &ptr);
 	return (0);
 } */
