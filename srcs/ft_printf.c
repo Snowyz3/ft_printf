@@ -25,7 +25,7 @@ static int	putnbr_base(long long nbr, char ch, int base)
 		nbr *= -1;
 		ft_putchar_fd('-', 1);
 	}
-	if (nbr >= (long long)base)
+	if (nbr > (long long)base)
 	{
 		putnbr_base(nbr / base, ch, base);
 		ft_putnbr(nbr, ch, base);
@@ -81,13 +81,13 @@ int	ft_printf(const char *format, ...)
 	return (len);
 }
 
-/* #include <stdio.h>
+#include <stdio.h>
 #include <limits.h>
 
 int	main()
 {
-	printf("%d\n", ft_printf(" %p %p ", 0, 0));
-	printf("%d\n", printf(" %p %p ", 0, 0));
+	printf("%d\n", ft_printf(" %p ", -1));
+	printf("%d\n", printf(" %p ", -1));
 
 	return (0);
-} */
+}
