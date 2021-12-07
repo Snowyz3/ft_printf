@@ -47,10 +47,10 @@ static int	convert(const char ch, va_list arg)
 	else if (ch == 'p')
 	{
 		ft_putstr_fd("0x", 1);
-		return (putnbr_base(va_arg(arg, unsigned long), 'p', 16) + 2);
+		return (putnbr_base(va_arg(arg, unsigned long), ch, 16) + 2);
 	}
 	else if (ch == 'd' || ch == 'i')
-		return (ft_putnbr(va_arg(arg, int)));
+		return (putnbr_base(va_arg(arg, int), ch, 10));
 	else if (ch == 'u')
 		return (putnbr_base(va_arg(arg, unsigned int), ch, 10));
 	else if (ch == 'x' || ch == 'X')
