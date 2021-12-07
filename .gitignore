@@ -1,5 +1,7 @@
 a.out
 testr*.c
+*.o
+*.a
 42TESTERS-PRINTF
 ft_printf_test
 pft

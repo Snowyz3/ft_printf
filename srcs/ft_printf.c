@@ -52,17 +52,6 @@ static int	putnbr_base(unsigned long long nbr, char ch, unsigned int base)
 	return (g_len);
 }
 
-static int	putptr(unsigned long long nbr)
-{
-	if (nbr == 0)
-	{
-		ft_putstr_fd("(nil)", 1);
-		return (5);
-	}
-	ft_putstr_fd("0x", 1);
-	return (putnbr_base(nbr, 'p', 16) + 2);
-}
-
 static int	convert(const char ch, va_list arg)
 {
 	if (ch == 'c')
@@ -70,7 +59,10 @@ static int	convert(const char ch, va_list arg)
 	else if (ch == 's')
 		return (ft_putstr_fd(va_arg(arg, char *), 1));
 	else if (ch == 'p')
-		return (putptr(va_arg(arg, unsigned long)));
+	{
+		ft_putstr_fd("0x", 1);
+		return (putnbr_base(va_arg(arg, unsigned long), 'p', 16) + 2);
+	}
 	else if (ch == 'd' || ch == 'i')
 		return (ft_putnbr(va_arg(arg, int)));
 	else if (ch == 'u')
@@ -103,13 +95,13 @@ int	ft_printf(const char *format, ...)
 	return (len);
 }
 
-/* #include <stdio.h>
+#include <stdio.h>
 #include <limits.h>
 
 int	main()
 {
-	printf("%d\n", ft_printf(" %u ", LONG_MIN));
-	printf("%d\n", printf(" %u ", LONG_MIN));
+	printf("%d\n", ft_printf(" %p %p ", 0, 0));
+	printf("%d\n", printf(" %p %p ", 0, 0));
 
 	return (0);
-} */
+}
