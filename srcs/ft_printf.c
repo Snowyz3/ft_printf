@@ -95,7 +95,6 @@ int	ft_printf(const char *format, ...)
 	return (len);
 }
 
-
 /* #include <stdio.h>
 #include <limits.h>
 
