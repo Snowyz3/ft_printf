@@ -81,7 +81,7 @@ int	ft_printf(const char *format, ...)
 	return (len);
 }
 
-#include <stdio.h>
+/* #include <stdio.h>
 #include <limits.h>
 
 int	main()
@@ -90,4 +90,4 @@ int	main()
 	printf("%d\n", printf(" %p ", -1));
 
 	return (0);
-}
+} */
