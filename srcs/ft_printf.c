@@ -6,15 +6,7 @@ char	g_upperhex[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
 '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 int		g_len;
 
-static void	ft_putnbr(long long nbr, char ch, int base)
-{
-	if (ch == 'X')
-		write(1, &g_upperhex[(nbr % base)], 1);
-	else
-		write(1, &g_lowerhex[(nbr % base)], 1);
-}
-
-static int	putnbr_base(long long nbr, char ch, int base)
+static int	ft_putnbr(long nbr)
 {
 	int	temp;
 
@@ -25,16 +17,38 @@ static int	putnbr_base(long long nbr, char ch, int base)
 		nbr *= -1;
 		ft_putchar_fd('-', 1);
 	}
-	if (nbr > (long long)base)
+	if (nbr > 9)
 	{
-		putnbr_base(nbr / base, ch, base);
-		ft_putnbr(nbr, ch, base);
+		ft_putnbr(nbr / 10);
+		ft_putchar_fd((nbr % 10) + 48, 1);
 	}
 	else
-		ft_putnbr(nbr, ch, base);
+		ft_putchar_fd((nbr % 10) + 48, 1);
 	g_len++;
 	if (temp < 0)
 		return (g_len + 1);
+	return (g_len);
+}
+
+static int	putunbr_base(unsigned long nbr, char ch, int base)
+{
+	g_len = 0;
+	if (nbr >= (unsigned long)base)
+	{
+		putunbr_base(nbr / base, ch, base);
+		if (ch == 'X')
+			write(1, &g_upperhex[nbr % base], 1);
+		else
+			write(1, &g_lowerhex[nbr % base], 1);
+	}
+	else
+	{
+		if (ch == 'X')
+			write(1, &g_upperhex[nbr % base], 1);
+		else
+			write(1, &g_lowerhex[nbr % base], 1);
+	}
+	g_len++;
 	return (g_len);
 }
 
@@ -47,14 +61,14 @@ static int	convert(const char ch, va_list arg)
 	else if (ch == 'p')
 	{
 		ft_putstr_fd("0x", 1);
-		return (putnbr_base(va_arg(arg, unsigned long), ch, 16) + 2);
+		return (putunbr_base(va_arg(arg, unsigned long), ch, 16) + 2);
 	}
 	else if (ch == 'd' || ch == 'i')
-		return (putnbr_base(va_arg(arg, int), ch, 10));
+		return (ft_putnbr(va_arg(arg, int)));
 	else if (ch == 'u')
-		return (putnbr_base(va_arg(arg, unsigned int), ch, 10));
+		return (putunbr_base(va_arg(arg, unsigned int), ch, 10));
 	else if (ch == 'x' || ch == 'X')
-		return (putnbr_base(va_arg(arg, unsigned int), ch, 16));
+		return (putunbr_base(va_arg(arg, unsigned int), ch, 16));
 	else if (ch == '%')
 		ft_putchar_fd('%', 1);
 	return (1);
@@ -81,13 +95,14 @@ int	ft_printf(const char *format, ...)
 	return (len);
 }
 
+
 /* #include <stdio.h>
 #include <limits.h>
 
 int	main()
 {
-	printf("%d\n", ft_printf(" %p ", -1));
-	printf("%d\n", printf(" %p ", -1));
+	printf("%d\n", ft_printf(" %p %p ", LONG_MIN, LONG_MAX));
+	printf("%d\n", printf(" %p %p ", LONG_MIN, LONG_MAX));
 
 	return (0);
 } */
