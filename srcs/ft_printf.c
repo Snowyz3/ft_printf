@@ -95,7 +95,7 @@ int	ft_printf(const char *format, ...)
 	return (len);
 }
 
-#include <stdio.h>
+/* #include <stdio.h>
 #include <limits.h>
 
 int	main()
@@ -104,4 +104,4 @@ int	main()
 	printf("%d\n", printf(" %p %p ", 0, 0));
 
 	return (0);
-}
+} */
